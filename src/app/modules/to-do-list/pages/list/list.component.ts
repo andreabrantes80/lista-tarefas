@@ -16,15 +16,20 @@ export class ListComponent {
   public getListItens = this.#setListItens.asReadonly();
 
   #parseItens() {
-    return JSON.parse(localStorage.getItem('@my-list') || '[]')
+    return JSON.parse(localStorage.getItem('@my-list') || '[]');
   }
 
   public getInputAndAddItem(value: IListItens) {
     localStorage.setItem(
-      '@my-list', JSON.stringify([...this.#setListItens(), value])
+      '@my-list',
+      JSON.stringify([...this.#setListItens(), value])
     );
 
     return this.#setListItens.set(this.#parseItens());
+  }
 
+  public deleteAllItems() {
+    localStorage.removeItem('@my-list');
+    return this.#setListItens.set(this.#parseItens());
   }
 }
