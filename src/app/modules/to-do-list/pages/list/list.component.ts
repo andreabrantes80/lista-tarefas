@@ -1,6 +1,6 @@
+import { IListItens } from './../../interface/IListItem.interface';
 import { Component, signal } from '@angular/core';
 import { InputAddItemComponent } from '../../components/input-add-item/input-add-item.component';
-import { IListItens } from '../../interface/IListItem.interface';
 import { InputListItemComponent } from '../../components/input-list-item/input-list-item.component';
 
 @Component({
@@ -60,21 +60,32 @@ export class ListComponent {
   }
 
   public updateItemText(newItem: { id: string; value: string }) {
-     this.#setListItens.update((oldValue: IListItens[]) => {
-       oldValue.filter((res) => {
-         if (res.id === newItem.id) {
-           res.value = newItem.value;
-           return res;
-         }
+    this.#setListItens.update((oldValue: IListItens[]) => {
+      oldValue.filter((res) => {
+        if (res.id === newItem.id) {
+          res.value = newItem.value;
+          return res;
+        }
 
-         return res;
-       });
-       return oldValue;
-     });
-     return localStorage.setItem(
-       '@my-list',
-       JSON.stringify(this.#setListItens())
-     );
+        return res;
+      });
+      return oldValue;
+    });
+    return localStorage.setItem(
+      '@my-list',
+      JSON.stringify(this.#setListItens())
+    );
+  }
+
+  public deleteItemText(id: string) {
+    this.#setListItens.update((oldValue: IListItens[]) => {
+      return oldValue.filter((res) => res.id !== id);
+    });
+
+    return localStorage.setItem(
+      '@my-list',
+      JSON.stringify(this.#setListItens())
+    );
   }
 
   public deleteAllItems() {
