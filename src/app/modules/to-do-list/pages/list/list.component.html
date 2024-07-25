@@ -21,7 +21,12 @@
 }@else {
   <app-input-add-item  [inputListItens]="getListItens()" (outputAddListItens)="getInputAndAddItem($event)" ></app-input-add-item>
 
-  <main class="container"></main>
+  <main class="container">
+    <h2>Pendências</h2>
+    <app-input-list-item [inputListItens]="getListItens()" ></app-input-list-item>
+    <h2>Concluídas</h2>
+    <app-input-list-item [inputListItens]="getListItens()" ></app-input-list-item>
+  </main>
 
   <footer>
     <button class="btn btn-danger" (click)="deleteAllItems()">Deletar todos os items</button>
