@@ -2,6 +2,7 @@ import { IListItens } from './../../interface/IListItem.interface';
 import { Component, signal } from '@angular/core';
 import { InputAddItemComponent } from '../../components/input-add-item/input-add-item.component';
 import { InputListItemComponent } from '../../components/input-list-item/input-list-item.component';
+import { ELocalStorage } from '../../enum/ELocalStarge.enum';
 
 @Component({
   selector: 'app-list',
@@ -17,12 +18,19 @@ export class ListComponent {
   public getListItens = this.#setListItens.asReadonly();
 
   #parseItens() {
-    return JSON.parse(localStorage.getItem('@my-list') || '[]');
+    return JSON.parse(localStorage.getItem(ELocalStorage.MY_LIST) || '[]');
+  }
+
+  #updateLocalStorage() {
+    return localStorage.setItem(
+      ELocalStorage.MY_LIST,
+      JSON.stringify(this.#setListItens())
+    );
   }
 
   public getInputAndAddItem(value: IListItens) {
     localStorage.setItem(
-      '@my-list',
+      ELocalStorage.MY_LIST,
       JSON.stringify([...this.#setListItens(), value])
     );
 
@@ -53,10 +61,7 @@ export class ListComponent {
       });
       return oldValue;
     });
-    return localStorage.setItem(
-      '@my-list',
-      JSON.stringify(this.#setListItens())
-    );
+    return this.#updateLocalStorage();
   }
 
   public updateItemText(newItem: { id: string; value: string }) {
@@ -77,19 +82,16 @@ export class ListComponent {
     );
   }
 
-  public deleteItemText(id: string) {
+  public deleteItem(id: string) {
     this.#setListItens.update((oldValue: IListItens[]) => {
       return oldValue.filter((res) => res.id !== id);
     });
 
-    return localStorage.setItem(
-      '@my-list',
-      JSON.stringify(this.#setListItens())
-    );
+    return this.#updateLocalStorage();
   }
 
   public deleteAllItems() {
-    localStorage.removeItem('@my-list');
+    localStorage.removeItem(ELocalStorage.MY_LIST);
     return this.#setListItens.set(this.#parseItens());
   }
 }
